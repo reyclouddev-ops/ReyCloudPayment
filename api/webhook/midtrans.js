@@ -1,9 +1,37 @@
 const crypto = require("crypto");
 
-async function sendTelegramPhoto(caption) {
+// =========================
+// PILIH FOTO BERDASARKAN STATUS
+// =========================
 
-    const photo =
-    "https://reycloudpayment.legionteknologi.my.id/success.png";
+function getPhoto(status) {
+
+    switch (status) {
+
+        case "settlement":
+        case "capture":
+            return "https://reycloudpayment.legionteknologi.my.id/success.png";
+
+        case "pending":
+            return "https://reycloudpayment.legionteknologi.my.id/pending.png";
+
+        case "expire":
+        case "cancel":
+        case "deny":
+            return "https://reycloudpayment.legionteknologi.my.id/failed.png";
+
+        default:
+            return "https://reycloudpayment.legionteknologi.my.id/logo.png";
+
+    }
+
+}
+
+// =========================
+// KIRIM FOTO KE TELEGRAM
+// =========================
+
+async function sendTelegram(photo, caption) {
 
     const response = await fetch(
         `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendPhoto`,
@@ -13,15 +41,20 @@ async function sendTelegramPhoto(caption) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+
                 chat_id: process.env.TELEGRAM_CHAT_ID,
+
                 photo,
+
                 caption,
+
                 parse_mode: "HTML"
+
             })
         }
     );
 
-    return response.json();
+    return await response.json();
 
 }
 
@@ -57,8 +90,11 @@ module.exports = async (req, res) => {
 
         const nominal = Number(data.gross_amount).toLocaleString("id-ID");
         const metode = data.payment_type;
-
-        await sendTelegramPhoto(`
+        const waktu = formatTanggal(data.transaction_time);
+        const status = formatStatus(data.transaction_status);
+        const photo = getPhoto(data.transaction_status);
+        
+        await sendTelegram(photo, `
 🚀 <b>REYCLOUD PAYMENT INFO</b>
 
 ━━━━━━━━━━━━━━━━━━━━━━
