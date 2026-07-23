@@ -1,0 +1,12 @@
+{
+  "name": "reycloud-midtrans-webhook",
+  "version": "2.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node api/webhook/midtrans.js"
+  },
+  "dependencies": {
+    "midtrans-client": "^1.3.1"
+  }
+}
