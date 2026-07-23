@@ -3,7 +3,7 @@ const midtransClient = require("midtrans-client");
 
 const core = new midtransClient.CoreApi({
 
-    isProduction: false,
+    isProduction: true,
 
     serverKey:
     process.env.MIDTRANS_SERVER_KEY
