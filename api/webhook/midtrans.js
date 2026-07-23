@@ -1,29 +1,22 @@
 const crypto = require("crypto");
 
-async function sendTelegram(text) {
-async function sendTelegramPhoto(caption){
+async function sendTelegramPhoto(caption) {
 
     const photo =
-    "https://reycloudpayment.legionteknologi.my.id/success.jpg";
+    "https://reycloudpayment.legionteknologi.my.id/success.png";
 
     const response = await fetch(
         `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendPhoto`,
         {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-
-                chat_id:
-                process.env.TELEGRAM_CHAT_ID,
-
+            body: JSON.stringify({
+                chat_id: process.env.TELEGRAM_CHAT_ID,
                 photo,
-
                 caption,
-
-                parse_mode:"HTML"
-
+                parse_mode: "HTML"
             })
         }
     );
